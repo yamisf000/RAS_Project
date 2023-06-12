@@ -1,0 +1,8 @@
+{
+  "runtimeOptions": {
+    "additionalProbingPaths": [
+      "C:\\Users\\nolif\\.dotnet\\store\\|arch|\\|tfm|",
+      "C:\\Users\\nolif\\.nuget\\packages"
+    ]
+  }
+}

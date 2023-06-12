@@ -1,0 +1,599 @@
+﻿@model HakunaMatata.Models.ViewModels.VM_RealEstateDetails;
+
+@section scripts{
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=MY_API_KEY&callback=initMap">
+    </script>
+}
+
+    @{
+    ViewData["Title"] = "Thông tin chi tiết";
+
+    var realEstateType = Model.RealEstateTypeId switch
+    {
+        1 => "Chung cư Mini",
+        2 => "Kí túc xá",
+        3 => "Nhà Trọ",
+        _ => "PHÒNG TRỌ"
+    };
+
+    var statusCss = Model.Status.Equals("Còn phòng") ? "text-success" : "text-disable";
+    var statusIcon = Model.Status.Equals("Còn phòng") ? "fa fa-check" : "fa fa-times";
+
+    var isExpired = Convert.ToDateTime(Model.ExprireTime) >= DateTime.Now ? "d-none" : "d-block";
+}
+<!-- breadcrumb area start -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+<div class="breadcrumb-area jarallax" style="background-image:url(/assets/img/bg/wood.jpg);">
+    <div class="container">
+        <div class="row">
+            <div class="col-6">
+                <div id="hero-carousel" class="carousel slide">
+                    <div class="carousel-inner">
+                        <div class="carousel-item c-item">
+                            <img src="/assets/img/banner1.jpg" class="d-block w-100 c-img" alt="hinh1">
+                        </div>
+                        width        <div class="carousel-item active c-item">
+                            <img src="/assets/img/banner2.jpg" class="d-block w-100 c-img" alt="hinh2">
+                        </div>
+                        <div class="carousel-item c-item">
+                            <img src="/assets/img/banner3.jpg" class="d-block w-100 c-img" alt="hinh3">
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#hero-carousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#hero-carousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            </div>
+            <div class="col-6 info-item">
+                <h2 style="color :white" class="address-item">@Model.Title</h2>
+                <h3 style="color :white" class="code-item">@Model.Address</h3style>
+                    <h2 style="color :white" class="current-item">@Model.Price Vnd</h2>
+                    <p style="color :white" class="container-text"></p>
+                <div class="col-xl-4 col-lg-6 col-md-6 btn-container">
+                    <input style=background-color:crimson" class="btn btn-buy" type="submit" value="ADD TO WISHLIST" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+
+    .c-item {
+        height: 480px;
+    }
+
+    .c-img {
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .carousel.slide {
+        width: 100%;
+    }
+
+    .address-item {
+        padding-top: 40px;
+    }
+
+    .info-item {
+        z-index: 10;
+    }
+
+    .btn-buy,
+    .btn-buy:hover {
+        border: 1px solid #000;
+        background-color: rgb(245 121 121);
+    }
+
+    .page-title {
+        padding-top: 40px;
+    }
+
+    .agent-user {
+        height: auto;
+        border: 1px solid #000;
+        text-align: center;
+        padding: 12px 0;
+    }
+
+    .agent-name,
+    .agent-nick-name {
+        margin-left: -16px;
+    }
+
+    .agent-nick-name {
+        margin-bottom: 48px;
+    }
+
+    .agent-avatar {
+        width: 60px;
+        height: 60px;
+        border-radius: 100px;
+        margin: auto
+    }
+
+    .agent-avatar {
+        display: flex;
+    }
+
+    .img-avatar {
+        border-radius: 100px;
+        border: 1px solid #000;
+        align-items: center;
+        margin-left: -16px;
+    }
+
+    .btn-contact,
+    .btn-contact:hover {
+        background-color: #0000;
+        border: 1px solid #000;
+    }
+
+    .btn-sign,
+    .btn-sign:hover {
+        background-color: #b99796;
+    }
+
+    .btn-contact, .btn-sign {
+        border: 1px solid #000;
+        width: 100%;
+    }
+
+    .btn-container {
+        padding-right: 16px;
+        margin-bottom: 12px;
+    }
+
+    .social-icon {
+        justify-content: space-between;
+        margin-left: -16px;
+    }
+
+    .frame-property {
+          background-color: #fff;
+          padding: 20px;
+          border-radius: 8px;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .img-property-item {
+          position: relative;
+          overflow: hidden;
+          border-radius: 8px;
+    }
+
+        .img-property-item img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+        }
+
+
+    p {
+    color: black;
+    }
+.btn-buy:hover {
+background-color:aquamarine;
+}
+
+    .property-info {
+        margin-bottom: 30px;
+    }
+
+        .property-info h4 {
+            color: #333;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .property-info h6 {
+            color: #666;
+            font-style: italic;
+            margin-bottom: 10px;
+        }
+
+    .property-news-single-card {
+        background-color: white;
+        padding: 30px;
+        margin-bottom: 30px;
+    }
+
+        .property-news-single-card .content-title {
+            color: #333;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .property-news-single-card p {
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .property-news-single-card ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+            .property-news-single-card ul li {
+                color: #666;
+                margin-bottom: 5px;
+            }
+
+                .property-news-single-card ul li i {
+                    color: #333;
+                    margin-right: 5px;
+                }
+
+    .carousel-inner {
+        height: 500px;
+    }
+
+    .carousel-item {
+        height: 100%;
+    }
+
+    .img-property-item {
+        margin: 16px 0;
+        padding-bottom: 32px;
+    }
+
+        .img-property-item img {
+            width: 100%;
+            height: auto;
+        }
+
+    .btn-buy {
+        border: 1px solid #000;
+        background-color: saddlebrown; 
+        color: white;
+        padding: 10px 20px;
+        font-weight: bold;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+        .btn-buy:hover {
+            background-color: peru; /* Updated color */
+        }
+
+    li a {
+        color: brown;
+        text-decoration: none;
+       
+    }
+</style>
+
+
+<!-- breadcrumb area End -->
+<!-- property-details-area start -->
+
+<div class="property-details-area">
+    <div class="container">
+        <div class="col-lg-12">
+            <div class="breadcrumb-inner">
+                <h1 class="page-title">Thông tin chi tiết</h1>
+                <!--<ul class="page-list">
+                    <li><a href="#">Trang chủ</a></li>
+                    <li>Thông tin chi tiết</li>
+                </ul>  -->
+            </div>
+        </div>
+        <div class="row pd-top-40">
+            <div class="col-lg-9 frame-property">
+                <div class="img-property-item border-bottom-yellow">
+                    <img src="/assets/img/samplehouse.jpg" class="d-block w-100 c-img" alt="hinh1">
+                </div>
+                <div class="property-info mb-5 ">
+                    <div class="h4 text-danger">
+                        @Model.Title
+                    </div>
+                    <div class="h6 font-italic">@realEstateType</div>
+                </div>
+                <div class="property-news-single-card border-bottom-yellow mb-4 pb-2">
+                    <div class="row">
+                        <div class="col-md-6 col-sm-6">
+                            <div class="single-property-info">
+                                <div class="h5">Tình trạng</div>
+                                <p class="@statusCss font-weight-bold"><i class="@statusIcon"></i>@Model.Status</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-6">
+                            <div class="single-property-info">
+                                <div class="h5">Số phòng</div>
+                                <p><i class="fa fa-home"></i>@Model.RoomNumber phòng</p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-sm-6">
+                            <div class="single-property-info">
+                                <div class="h5">Giá phòng</div>
+                                <p class="text-danger">
+                                    <i class="fa fa-usd"></i>
+                                    @Helper.VNCurrencyFormat(Model.Price.ToString())/tháng
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-6">
+                            <div class="single-property-info">
+                                <div class="h5">Diện tích</div>
+                                <p class="text-danger">
+                                    <img src="~/assets/img/icons/7.png" alt="img">
+                                    @Model.Acreage m<sub style="vertical-align:super">2</sub>
+                                </p>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-6 col-sm-6">
+                            <div class="single-property-info">
+                                <div class="h5">Ngày bắt đầu</div>
+                                <p><i class="fa fa-calendar"></i>@Model.BeginTime</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-6">
+                            <div class="single-property-info">
+                                <div class="h5">Ngày hết hạn</div>
+                                <p><i class="fa fa-calendar-times-o"></i>@Model.ExprireTime</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-6">
+                            <div class="single-property-info">
+                                <div class="h5">SĐT liên hệ</div>
+                                <p><i class="fa fa-phone"></i>@Model.ContactNumber</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-6">
+                            <div class="single-property-info">
+                                <div class="h5">Người đăng</div>
+                                <p><i class="fa fa-user"></i>@Model.AgentName</p>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-12">
+                            <div class="single-property-info">
+                                <div class="h5">Địa chỉ</div>
+                                <p>
+                                    <img src="~/assets/img/icons/1.png" alt="img">
+                                    @Model.Address
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="@isExpired" id="da-het-han"></div>
+
+                <div class="property-news-single-card border-bottom-yellow">
+                    <div class="content-title h4">Mô tả chi tiết</div>
+                    <div class="mb-3">
+                        @Html.Raw(Model.Description)
+                    </div>
+
+                </div>
+                <div class="property-news-single-card border-bottom-yellow pb-4">
+                    <div class="content-title mb-3 h4">Tiện ích có sẵn</div>
+                    <div class="row">
+                        @if (Model.SecurityCamera)
+                        {
+                            <div class="col-sm-6">
+                                <ul class="rld-list-style mb-3">
+                                    <li><i class="fa fa-check"></i> Camera an ninh</li>
+                                </ul>
+                            </div>
+                        }
+                        @if (Model.HasPrivateWc)
+                        {
+                            <div class="col-sm-6">
+                                <ul class="rld-list-style mb-3">
+
+                                    <li><i class="fa fa-check"></i> Vệ sinh riêng</li>
+
+                                </ul>
+                            </div>
+                        }
+
+                        @if (Model.HasMezzanine)
+                        {
+                            <div class="col-sm-6">
+                                <ul class="rld-list-style mb-3">
+
+                                    <li><i class="fa fa-check"></i> Có gác lửng</li>
+
+                                </ul>
+                            </div>
+                        }
+
+                        @if (Model.AllowCook)
+                        {
+                            <div class="col-sm-6">
+                                <ul class="rld-list-style mb-3">
+
+                                    <li><i class="fa fa-check"></i> Cho phép nấu ăn</li>
+
+                                </ul>
+                            </div>
+                        }
+
+                        @if (Model.FreeTime)
+                        {
+                            <div class="col-sm-6">
+                                <ul class="rld-list-style mb-3">
+
+                                    <li><i class="fa fa-check"></i> Giờ giấc tự do</li>
+
+                                </ul>
+                            </div>
+                        }
+                        @if (Model.WifiPrice == 0)
+                        {
+                            <div class="col-sm-6">
+                                <ul class="rld-list-style mb-3">
+                                    <li><i class="fa fa-check"></i> Free wifi</li>
+                                </ul>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+
+                <div class="property-news-single-card style-two border-bottom-yellow">
+                    <div class="content-title mb-3 h4">Hình ảnh</div>
+                    @if (Model.ImageUrls.Count > 0)
+                    {
+                        <div id="picturesCarousel" class="carousel slide" data-ride="carousel">
+
+                            <ol class="carousel-indicators">
+                                <li data-target="#picturesCarousel" data-slide-to="0" class="active"></li>
+                                @for (var i = 1; i < Model.ImageUrls.Count; i++)
+                                {
+                                    <li data-target="#picturesCarousel" data-slide-to="@i"></li>
+                                }
+                            </ol>
+
+                            <div class="carousel-inner" style="height: 500px;">
+                                <div class="carousel-item active" style="height: 100%;">
+                                    <img class="d-block  mx-auto h-100" src="@Model.ImageUrls.First()" alt="">
+                                </div>
+                                @for (var i = 1; i < Model.ImageUrls.Count; i++)
+                                {
+                                    <div class="carousel-item" style="height: 100%;">
+                                        <img class="d-block mx-auto h-100" src="@Model.ImageUrls[i]" alt="">
+                                    </div>
+                                }
+                            </div>
+
+                            <a class="carousel-control-prev" href="#picturesCarousel" role="button"
+                           data-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                            <a class="carousel-control-next" href="#picturesCarousel" role="button"
+                           data-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </div>
+                    }
+                    else
+                    {
+                        <div>Hiện chưa có hình ảnh nào.</div>
+                    }
+
+                </div>
+                <div class="property-news-single-card style-two">
+                    <div class="content-title mb-3 h4">Bản đồ</div>
+                    <p class="font-italic">(Vị trí trên bản đồ chỉ mang tính chất tương đối, chưa phải vị trí chính xác)</p>
+                    <input type="hidden" id="lat" value="@Model.Latitude" />
+                    <input type="hidden" id="longt" value="@Model.Longtitude" />
+                    <div id="map" style="height: 500px; border-radius:8px"></div>
+                </div>
+
+
+            </div>
+            <div class="col-lg-3">
+                <div class="agent-user mt-3 pl-3">
+                    <div class="agent-avatar">
+                        <img class="img-avatar" src="./assets/img/avatar.jpg" />
+                    </div>
+                    <h2 style="align-content:center" class="agent-name">@Model.AgentName</h2>
+                    <h4 class="agent-nick-name">@Model.AgentId</h4>
+                    <div class="btn-container">
+                        <input class="btn btn-contact" type="submit" value="CALL" />
+                    </div>
+                    <div class="btn-container">
+                        <input class="btn btn-contact" type="submit" value="EMAIL" />
+                    </div>
+                    <div class="btn-container">
+                        <input class="btn btn-sign" type="submit" value="Sign in to contact to Agent" />
+                    </div>
+                    <ul class="social-icon">
+                        <li>
+                            <a href="#" target="_blank">
+                                <i class="fa fa-facebook  "></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" target="_blank">
+                                <i class="fa fa-twitter  "></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" target="_blank">
+                                <i class="fa fa-linkedin"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="widget mt-3 pl-3">
+                    <div class="text-danger h6 pt-3">Xem theo loại phòng</div>
+                    <ul class="ml-2">
+
+                        @foreach (var item in ViewBag.type)
+                       {
+                            var b = item.Id;
+                            <li><a asp-action="Index" asp-route-type="@b">@item.RealEstateTypeName</a> </li>
+                        }
+
+@*                        <li><a asp-action="Index" asp-route-type="2">Thuê nhà nguyên căn</a> </li>
+                        <li><a asp-action="Index" asp-route-type="3">Căn hộ chung cư</a> </li>
+                        <li><a asp-action="Index" asp-route-type="4">Ở ghép</a> </li>
+*@
+                    </ul>
+                </div>
+                <div class="widget mt-3 pl-3">
+                    <div class="text-danger h6 pt-3">Xem theo Thành Phố</div>
+                    <ul class="ml-2">
+
+                        @foreach (var item in ViewBag.city){
+                            var b = item.Id;
+                            <li><a asp-action="Index" asp-route-city="@b">@item.CityName</a> </li>
+                        }
+                     @*   <li><a asp-action="Index" asp-route-city="item.id" asp-route-district="1">Hòa Lạc</a> </li>
+                  *@
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- property details area end -->
+<!-- Recommended area start -->
+<div class="recommended-area pd-top-90 pd-bottom-70">
+    <div class="container">
+        <div class="section-title">
+            <h3 class="title">Bài đăng liên quan</h3>
+            <a class="btn-view-all" asp-action="Index">Xem tất cả</a>
+        </div>
+        @await Html.PartialAsync("_recommendList", Model.RecommmendList)
+    </div>
+</div>
+<!-- Recommended area end -->
+
+<script>
+    // Initialize and add the map
+    function initMap() {
+        // The location of real esate
+        var latitude = document.getElementById('lat').value;
+        var longtitude = document.getElementById('longt').value;
+        var loca = { lat: Number(latitude), lng: Number(longtitude) };
+        // The map, centered at real estate
+        var map = new google.maps.Map(
+            document.getElementById('map'), { zoom: 17, center: loca });
+        // The marker
+        var marker = new google.maps.Marker({ position: loca, map: map });
+    }
+</script>
